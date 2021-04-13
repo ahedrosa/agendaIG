@@ -25,6 +25,7 @@ public class IGAgendaBDD extends javax.swing.JFrame {
         
         initComponents();
         this.setLocationRelativeTo(null);
+        listadoJTextArea.setText(agenda.listado());
     }
 
     /**
@@ -46,6 +47,7 @@ public class IGAgendaBDD extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         listadoJTextArea = new javax.swing.JTextArea();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addFocusListener(new java.awt.event.FocusAdapter() {
@@ -102,12 +104,15 @@ public class IGAgendaBDD extends javax.swing.JFrame {
         listadoJTextArea.setRows(5);
         jScrollPane1.setViewportView(listadoJTextArea);
 
+        jLabel4.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
+        jLabel4.setText("Agenda Telefóinica");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(62, 62, 62)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(71, 71, 71)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(layout.createSequentialGroup()
@@ -123,18 +128,24 @@ public class IGAgendaBDD extends javax.swing.JFrame {
                             .addGap(18, 18, 18)
                             .addComponent(borrarJButton)))
                     .addComponent(jButton1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(90, 90, 90))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(48, 48, 48))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(140, 140, 140)
+                .addComponent(jLabel4)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap(36, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(28, 28, 28)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -151,7 +162,7 @@ public class IGAgendaBDD extends javax.swing.JFrame {
                         .addGap(68, 68, 68)
                         .addComponent(jButton1))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 372, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addGap(30, 30, 30))
         );
 
         pack();
@@ -174,26 +185,62 @@ public class IGAgendaBDD extends javax.swing.JFrame {
 
     private void buscarJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarJButtonActionPerformed
         Contacto contacto = null;
+        boolean esNombreValido = true, esTelefonoValido = true;
         
         if (nombreJTextField.getText().length() == 0 && telefonoJTextField2.getText().length() == 0) {
             javax.swing.JOptionPane.showMessageDialog(rootPane, "Error. No ha introducido ningún valor a buscar");
         }else if (nombreJTextField.getText().length() != 0 && telefonoJTextField2.getText().length() != 0) {
             javax.swing.JOptionPane.showMessageDialog(rootPane, "Error. No se puede buscar por ambos datos a la vez, "
                     + "borre o bien el nombre o bien el telefono");
-        }else if (nombreJTextField.getText().length() == 0) {
+        }else if (nombreJTextField.getText().length() != 0) {
             
-            try {
-                contacto = agenda.buscarPorNombre(nombreJTextField.getText());
+            for (int i = 0; i < nombreJTextField.getText().length(); i++) {
+                if(!FuncionesSobreCaracteres.esCaracterAlfabetico(nombreJTextField.getText().charAt(i))){
+                    esNombreValido=false;
+                }                
+            }
+            if (esNombreValido) {
+                try {
+                contacto = agenda.buscarPorNombre(nombreJTextField.getText().toLowerCase());
             } catch (SQLException ex) {
                 Logger.getLogger(IGAgendaBDD.class.getName()).log(Level.SEVERE, null, ex);
             }
-            javax.swing.JOptionPane.showConfirmDialog(rootPane, contacto);
+            javax.swing.JOptionPane.showMessageDialog(rootPane, "Contacto encontrado: \n" + contacto);
             
+            }else{
+                javax.swing.JOptionPane.showMessageDialog(rootPane, "Error ha usado carácteres no válidos en el campo NOMBRE");
+            }
+            
+        }else if (telefonoJTextField2.getText().length() != 9 ) {
+            javax.swing.JOptionPane.showMessageDialog(rootPane, "Error, el teéfono ha de formarse por 9 dígitos. Ni más, ni menos");
+        
+        }else if (telefonoJTextField2.getText().length() != 0) {
+            
+            for (int i = 0; i < telefonoJTextField2.getText().length(); i++) {
+                if(!FuncionesSobreCaracteres.esNumeroValido(telefonoJTextField2.getText().charAt(i))){
+                    esTelefonoValido=false;
+                }                
+            }
+            if (esTelefonoValido) {
+                try {
+                contacto = agenda.buscarPorTelefono(telefonoJTextField2.getText().toLowerCase());
+            } catch (SQLException ex) {
+                Logger.getLogger(IGAgendaBDD.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            javax.swing.JOptionPane.showMessageDialog(rootPane, "Contacto encontrado: \n" + contacto);
+            
+            }else{
+                javax.swing.JOptionPane.showMessageDialog(rootPane, "Error ha usado carácteres no válidos en el campo TELÉFONO");
+            }
         }
     }//GEN-LAST:event_buscarJButtonActionPerformed
 
+        
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        NuevoContactoJDialog agregarContacto = new NuevoContactoJDialog(this, rootPaneCheckingEnabled, agenda);
+        agregarContacto.setVisible(true);
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
@@ -207,8 +254,12 @@ public class IGAgendaBDD extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void formFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusGained
-        // TODO add your handling code here:
-//        listadoJTextArea.setText(agenda.listado());
+        try {
+            // TODO add your handling code here:
+            listadoJTextArea.setText(agenda.listado());
+        } catch (SQLException ex) {
+            Logger.getLogger(IGAgendaBDD.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_formFocusGained
 
     /**
@@ -259,6 +310,7 @@ public class IGAgendaBDD extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea listadoJTextArea;
     private javax.swing.JTextField nombreJTextField;

@@ -51,6 +51,7 @@ public class AgendaTelefonica{
    public void cerrar() throws SQLException {
       if (con != null) {
          con.close();
+          System.out.println("Conexión cerrada con éxito");
       }
    }
           
@@ -418,17 +419,19 @@ public class AgendaTelefonica{
    }
     
     
-    public void listado() throws SQLException{
+    public String listado() throws SQLException{
         
         boolean hayAlgunContacto = false;
-        System.out.println("Listado de la Agenda Telefónica");
-        System.out.println("-------------------------------");
+        String cad= "";
+        cad += "Listado de la Agenda Telefónica \n";
+        cad += "----------------------------------------- \n";
         
         ArrayList <Contacto> tabla = recuperarTodas();
         
         for (int i = 0; i < tabla.size(); ++i){
            
-                System.out.println(tabla.get(i).getNombre() + "\t" + tabla.get(i).getTelefono());
+                cad += (tabla.get(i).getNombre() + "\t" + tabla.get(i).getTelefono() + "\n");
+                cad += "----------------------------------------- \n";
                 hayAlgunContacto = true;
             
         }
@@ -436,6 +439,7 @@ public class AgendaTelefonica{
         if (!hayAlgunContacto){
             System.out.println("Agenda está vacía");
         }
+        return cad;
     }
     
 }
