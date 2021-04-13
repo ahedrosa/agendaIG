@@ -112,6 +112,27 @@ public class AgendaTelefonica{
       }
       return contacto;
    }
+    
+    public boolean seRepiteTelefono(String tel) throws SQLException {
+      Contacto contacto = null;
+      try{
+         PreparedStatement consulta = con.prepareStatement("SELECT nombre, telefono FROM " + this.nomTabla + " WHERE telefono = ?" );
+         consulta.setString(1, tel);
+         ResultSet resultado = consulta.executeQuery();
+         
+         while(resultado.next()){
+            contacto = new Contacto(resultado.getString("nombre"), resultado.getString("telefono"));
+         }
+        }catch(SQLException ex){
+           throw new SQLException(ex);
+        }
+      
+        if (contacto.getTelefono().compareTo(tel)==0) {
+            return true;
+        }else{
+            return false;
+        }    
+   }
      
   
     public  void consulta()throws SQLException{
@@ -156,14 +177,14 @@ public class AgendaTelefonica{
     }
     
     public void añade(Contacto contacto) throws SQLException{
-      try{
-        PreparedStatement consulta;
-        consulta = con.prepareStatement("INSERT INTO " + this.nomTabla + "(nombre, telefono) VALUES(?, ?)");
-        consulta.setString(1, contacto.getNombre());
-        consulta.setString(2, contacto.getTelefono());
-        consulta.execute();
-      }catch(SQLException ex){
-         throw new SQLException(ex);
+        try{
+            PreparedStatement consulta;
+            consulta = con.prepareStatement("INSERT INTO " + this.nomTabla + "(nombre, telefono) VALUES(?, ?)");
+            consulta.setString(1, contacto.getNombre());
+            consulta.setString(2, contacto.getTelefono());
+            consulta.execute();
+        }catch(SQLException ex){
+        throw new SQLException(ex);
       }
    }
     

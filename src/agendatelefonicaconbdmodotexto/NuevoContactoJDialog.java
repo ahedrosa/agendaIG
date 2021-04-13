@@ -5,6 +5,9 @@
  */
 package agendatelefonicaconbdmodotexto;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 
 /**
@@ -168,7 +171,52 @@ public class NuevoContactoJDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_borrarjButtonActionPerformed
 
     private void agregarjButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarjButton1ActionPerformed
-        // TODO add your handling code here:
+        
+        Contacto contacto = null;
+        boolean esNombreValido = true, esTelefonoValido = true;
+        
+        if (nombrejTextField.getText().length() == 0 || telefonojTextField.getText().length() == 0) {
+            javax.swing.JOptionPane.showMessageDialog(rootPane, "Error. No ha rellenado los 2 campos necesarops para para agregar el contacto");
+        
+        }else{
+            
+            for (int i = 0; i < nombrejTextField.getText().length(); i++) {
+                if(!FuncionesSobreCaracteres.esCaracterAlfabetico(nombrejTextField.getText().charAt(i))){
+                    esNombreValido=false;
+                }                
+            }
+            for (int i = 0; i < telefonojTextField.getText().length(); i++) {
+                if(!FuncionesSobreCaracteres.esNumeroValido(telefonojTextField.getText().charAt(i))){
+                    esTelefonoValido=false;
+                }                
+            }
+            
+            if (!esNombreValido) {
+                javax.swing.JOptionPane.showMessageDialog(rootPane, "Error ha "
+                        + "usado carácteres no válidos en el campo NOMBRE");                
+            }else{
+                contacto.setNombre(nombrejTextField.getText().toLowerCase());
+            }
+            
+            if (!esTelefonoValido || telefonojTextField.getText().length() != 9){ 
+                javax.swing.JOptionPane.showMessageDialog(rootPane, "Error ha "
+                        + "usado carácteres no válidos en el campo TELÉFONO o ha"
+                        + " introducido un número de dígitos distinto a 9");
+            }else{
+                contacto.setTelefono(telefonojTextField.getText().toLowerCase());
+            }
+            try {
+                if (agenda.seRepiteTelefono(contacto.getTelefono())) {
+                javax.swing.JOptionPane.showMessageDialog(rootPane, "Error. El telefono"
+                        + " que intenta agregar ya que encuentra en la agenda");
+                    
+                }else{
+                    agenda.añade(contacto);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(NuevoContactoJDialog.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_agregarjButton1ActionPerformed
 
     private void nombrejTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nombrejTextFieldKeyPressed
