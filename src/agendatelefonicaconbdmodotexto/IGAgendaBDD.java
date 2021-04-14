@@ -110,6 +110,7 @@ public class IGAgendaBDD extends javax.swing.JFrame {
         listadoJTextArea.setEditable(false);
         listadoJTextArea.setColumns(20);
         listadoJTextArea.setRows(5);
+        listadoJTextArea.setMargin(new java.awt.Insets(5, 5, 2, 2));
         jScrollPane1.setViewportView(listadoJTextArea);
 
         jLabel4.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
@@ -139,8 +140,8 @@ public class IGAgendaBDD extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(48, 48, 48))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(36, 36, 36))
             .addGroup(layout.createSequentialGroup()
                 .addGap(140, 140, 140)
                 .addComponent(jLabel4)

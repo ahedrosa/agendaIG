@@ -432,7 +432,7 @@ public class AgendaTelefonica{
      public ArrayList <Contacto> recuperarTodas() throws SQLException{
       ArrayList <Contacto> arrayListContactos= new ArrayList();
       try{
-         PreparedStatement consulta = con.prepareStatement("SELECT nombre, telefono FROM " + this.nomTabla);
+         PreparedStatement consulta = con.prepareStatement("SELECT nombre, telefono FROM " + this.nomTabla + " ORDER BY nombre");
          ResultSet resultado = consulta.executeQuery();
          
          while(resultado.next()){
