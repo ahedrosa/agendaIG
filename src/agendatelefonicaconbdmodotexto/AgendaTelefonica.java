@@ -31,6 +31,10 @@ public class AgendaTelefonica{
         this.nomTabla = nomTabla;
         con = obtener(this.nomBD);
     }
+
+    public void reconectar() throws SQLException, ClassNotFoundException {
+        con = obtener(this.nomBD);
+    }
     
     
     public Connection obtener(String nomBD) throws SQLException, ClassNotFoundException {
@@ -114,14 +118,15 @@ public class AgendaTelefonica{
    }
     
     public boolean seRepiteTelefono(String tel) throws SQLException {
-      Contacto contacto = null;
+      Contacto contacto = new Contacto();
       try{
          PreparedStatement consulta = con.prepareStatement("SELECT nombre, telefono FROM " + this.nomTabla + " WHERE telefono = ?" );
          consulta.setString(1, tel);
          ResultSet resultado = consulta.executeQuery();
          
          while(resultado.next()){
-            contacto = new Contacto(resultado.getString("nombre"), resultado.getString("telefono"));
+            contacto.setNombre(resultado.getString("nombre"));
+            contacto.setTelefono(resultado.getString("telefono"));
          }
         }catch(SQLException ex){
            throw new SQLException(ex);

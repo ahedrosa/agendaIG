@@ -8,7 +8,7 @@ package agendatelefonicaconbdmodotexto;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
+import sun.font.SunFontManager;
 
 /**
  *
@@ -16,23 +16,21 @@ import javax.swing.JFrame;
  */
 public class NuevoContactoJDialog extends javax.swing.JDialog {
     
-    AgendaTelefonica agenda;
+    AgendaTelefonica agenda = null;
 
     /**
      * Creates new form NuevoContactoJDialog
      */
-    public NuevoContactoJDialog(java.awt.Frame parent, boolean modal, AgendaTelefonica agen) {
+    
+    public NuevoContactoJDialog(java.awt.Frame parent, boolean modal) throws SQLException, ClassNotFoundException {
         super(parent, modal);
-        agenda = agen;
+        agenda = new AgendaTelefonica("agendaTel","agenda");
         initComponents();
         
         this.setLocationRelativeTo(null);
     }
 
-    private NuevoContactoJDialog(JFrame jFrame, boolean b) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -166,6 +164,8 @@ public class NuevoContactoJDialog extends javax.swing.JDialog {
 
     private void borrarjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_borrarjButtonActionPerformed
         
+        nombrejTextField.setFont(new java.awt.Font("Tahoma", 2, 10));
+        telefonojTextField.setFont(new java.awt.Font("Tahoma", 2, 10));
         nombrejTextField.setText("\"Escriba un Nombre\"");
         telefonojTextField.setText("\"Escriba un Teléfono\"");
     }//GEN-LAST:event_borrarjButtonActionPerformed
@@ -173,45 +173,46 @@ public class NuevoContactoJDialog extends javax.swing.JDialog {
     private void agregarjButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarjButton1ActionPerformed
         
         Contacto contacto = null;
+        String nombre, telefono;
         boolean esNombreValido = true, esTelefonoValido = true;
+        nombre = nombrejTextField.getText();
+        telefono = telefonojTextField.getText();
         
-        if (nombrejTextField.getText().length() == 0 || telefonojTextField.getText().length() == 0) {
+        if (nombre.length() == 0 || telefono.length() == 0) {
             javax.swing.JOptionPane.showMessageDialog(rootPane, "Error. No ha rellenado los 2 campos necesarops para para agregar el contacto");
         
         }else{
             
-            for (int i = 0; i < nombrejTextField.getText().length(); i++) {
-                if(!FuncionesSobreCaracteres.esCaracterAlfabetico(nombrejTextField.getText().charAt(i))){
+            for (int i = 0; i < nombre.length(); i++) {
+                if(!FuncionesSobreCaracteres.esCaracterAlfabetico(nombre.charAt(i))){
                     esNombreValido=false;
-                }                
+                }
             }
-            for (int i = 0; i < telefonojTextField.getText().length(); i++) {
-                if(!FuncionesSobreCaracteres.esNumeroValido(telefonojTextField.getText().charAt(i))){
+            for (int i = 0; i < telefono.length(); i++) {
+                if(!FuncionesSobreCaracteres.esNumeroValido(telefono.charAt(i))){
                     esTelefonoValido=false;
-                }                
+                }
             }
             
             if (!esNombreValido) {
                 javax.swing.JOptionPane.showMessageDialog(rootPane, "Error ha "
                         + "usado carácteres no válidos en el campo NOMBRE");                
-            }else{
-                contacto.setNombre(nombrejTextField.getText().toLowerCase());
-            }
-            
-            if (!esTelefonoValido || telefonojTextField.getText().length() != 9){ 
+            }else if (!esTelefonoValido || telefono.length() != 9){ 
                 javax.swing.JOptionPane.showMessageDialog(rootPane, "Error ha "
                         + "usado carácteres no válidos en el campo TELÉFONO o ha"
                         + " introducido un número de dígitos distinto a 9");
             }else{
-                contacto.setTelefono(telefonojTextField.getText().toLowerCase());
+                contacto = new Contacto(nombre.toLowerCase(), telefono.toLowerCase());
             }
             try {
-                if (agenda.seRepiteTelefono(contacto.getTelefono())) {
+                if (agenda.seRepiteTelefono(telefono)) {
                 javax.swing.JOptionPane.showMessageDialog(rootPane, "Error. El telefono"
                         + " que intenta agregar ya que encuentra en la agenda");
                     
                 }else{
                     agenda.añade(contacto);
+                    javax.swing.JOptionPane.showMessageDialog(rootPane, "Se ha agregado su contacto:\n" + contacto + "\n satisfactoriamente");
+                    dispose();
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(NuevoContactoJDialog.class.getName()).log(Level.SEVERE, null, ex);
@@ -222,6 +223,7 @@ public class NuevoContactoJDialog extends javax.swing.JDialog {
     private void nombrejTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nombrejTextFieldKeyPressed
         
         if (nombrejTextField.getText().compareTo("\"Escriba un Nombre\"")==0) {
+            nombrejTextField.setFont(new java.awt.Font("Tahoma", 0, 11));
             nombrejTextField.setText("");
         }
        
@@ -231,6 +233,7 @@ public class NuevoContactoJDialog extends javax.swing.JDialog {
     private void telefonojTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_telefonojTextFieldKeyPressed
         
         if (telefonojTextField.getText().compareTo("\"Escriba un Teléfono\"")==0) {
+            telefonojTextField.setFont(new java.awt.Font("Tahoma", 0, 11));
             telefonojTextField.setText("");
         }
         
@@ -238,7 +241,12 @@ public class NuevoContactoJDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_telefonojTextFieldKeyPressed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
+            agenda.cerrar();
+        } catch (SQLException ex) {
+            Logger.getLogger(NuevoContactoJDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
         dispose();
     }//GEN-LAST:event_formWindowClosed
 
@@ -272,7 +280,14 @@ public class NuevoContactoJDialog extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                NuevoContactoJDialog dialog = new NuevoContactoJDialog(new javax.swing.JFrame(), true);
+                NuevoContactoJDialog dialog = null;
+                try {
+                    dialog = new NuevoContactoJDialog(new javax.swing.JFrame(), true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(NuevoContactoJDialog.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(NuevoContactoJDialog.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
