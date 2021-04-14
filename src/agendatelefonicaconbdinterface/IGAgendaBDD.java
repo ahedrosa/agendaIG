@@ -3,12 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package agendatelefonicaconbdmodotexto;
+package agendatelefonicaconbdinterface;
 
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import sun.awt.resources.awt;
 
 /**
  *
@@ -18,6 +17,8 @@ public class IGAgendaBDD extends javax.swing.JFrame {
     private AgendaTelefonica agenda;
     /**
      * Creates new form IGAgendaBDD
+     * @throws java.sql.SQLException
+     * @throws java.lang.ClassNotFoundException
      */
     public IGAgendaBDD() throws SQLException, ClassNotFoundException {
         
@@ -315,9 +316,7 @@ public class IGAgendaBDD extends javax.swing.JFrame {
             public void run() {
                 try {
                     new IGAgendaBDD().setVisible(true);
-                } catch (SQLException ex) {
-                    Logger.getLogger(IGAgendaBDD.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ClassNotFoundException ex) {
+                } catch (SQLException | ClassNotFoundException ex) {
                     Logger.getLogger(IGAgendaBDD.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
