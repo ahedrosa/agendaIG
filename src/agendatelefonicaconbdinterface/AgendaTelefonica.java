@@ -194,54 +194,7 @@ public class AgendaTelefonica{
    }
     
       
-    public void alta()throws SQLException{
-        
-        String nombre, telefono;
-        Scanner entrada = new Scanner(System.in);
-        
-        do{
-            do{
-
-                System.out.println("Dame nombre a dar de alta:");
-                nombre = entrada.nextLine();
-                if (!Contacto.esValidoNombre(nombre)){
-                    System.out.println("Error, nombre invalido");
-                }
-
-            } while (!Contacto.esValidoNombre(nombre));
-            
-            nombre = nombre.toLowerCase();
-        
-            if (buscarPorNombre (nombre) != null){
-                System.out.println("Error, este nombre ya esta en la agenda");
-            }
-        } while (buscarPorNombre (nombre) != null);
-        
-        
-        do{
-            do{
-
-                System.out.println("Dame el telefono a dar de alta:");
-                telefono = entrada.nextLine();
-                if (!Contacto.esValidoTelefono(telefono)){
-                    System.out.println("Error, telefono invalido");
-                }
-
-            } while (!Contacto.esValidoTelefono(telefono));
-            
-            if (buscarPorTelefono(telefono) != null){
-                System.out.println("Error, este teléfono está duplicado");
-            }
-        } while (buscarPorTelefono(telefono) != null);
-        
-        Contacto nuevo = new Contacto(nombre, telefono);
-        
-        añade(nuevo);
-       
-        System.out.println("Se ha dado de alta el registro");
-            
-           
-    }
+   
     
     public void eliminar(String nombre) throws SQLException{
       try{
